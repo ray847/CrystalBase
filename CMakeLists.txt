@@ -7,18 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # External Libraries
-#if (NOT TARGET spdlog)
-#  add_subdirectory(lib/spdlog)
-#endif()
+#add_subdirectory(lib/spdlog)
 
 # Internal Library
 add_library(CrystalBase)
 target_sources(CrystalBase
   PRIVATE
     src/base.cpp
-    src/primitive_types.cpp
-    src/container_types.cpp
-    src/string.cpp
+    src/concepts.cpp
+    src/unrolled_for_loop.cpp
 )
 target_include_directories(CrystalBase
   PUBLIC

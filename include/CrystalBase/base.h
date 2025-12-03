@@ -1,12 +1,7 @@
-#ifndef CRYSTAL_BASE_H_
-#define CRYSTAL_BASE_H_
+#ifndef CRYSTALBASE_BASE_H_
+#define CRYSTALBASE_BASE_H_
 
-#include "CrystalBase/primitive_types.h"
-#include "CrystalBase/string.h"
-#include "CrystalBase/container_types.h"
-
-namespace crystal::base {
-
-} // namespace crystal::base
+#include "CrystalBase/concepts.h"
+#include "CrystalBase/unrolled_for_loop.h"
 
 #endif

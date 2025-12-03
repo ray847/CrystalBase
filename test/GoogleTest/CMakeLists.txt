@@ -1,5 +1,3 @@
-enable_testing()
-
 if (NOT TARGET googletest)
   include(FetchContent)
   FetchContent_Declare(

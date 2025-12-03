@@ -4,7 +4,7 @@ add_subdirectory(GoogleTest)
 
 add_executable(
   test
-  test.cpp
+  unrolled_for_loop.test.cpp
 )
 target_link_libraries(
   test
