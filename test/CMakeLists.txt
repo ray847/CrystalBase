@@ -5,6 +5,8 @@ add_subdirectory(GoogleTest)
 add_executable(
   test
   unrolled_for_loop.test.cpp
+  strict_index.test.cpp
+  stable_vector.test.cpp
 )
 target_link_libraries(
   test

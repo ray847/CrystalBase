@@ -1,17 +1,12 @@
-#include <iostream>
-
-#include "CrystalBase/unrolled_for_loop.h"
+#include "CrystalBase/strict_index.h"
+#include "CrystalBase/stable_vector.h"
 
 int main() {
-  struct Op1 {
-    void operator()() {
-      std::cout << "op1 called" << std::endl;
-    }
-  };
-  auto op2 = [](){
-    std::cout << "op2 called" << std::endl;
-  };
-  crystal::UnrolledForLoop<Op1, 3>();
-  crystal::UnrolledForLoop<decltype(op2), 4>(op2);
+  crystal::StableVector<int> sv{0, 1};
+  auto new_idx_2 = sv.PushBack(2);
+  crystal::StrictIdx<int> new_idx_3{sv.PushBack(3)};
+  sv.Erase(1);
+  auto new_idx_4 = sv.PushBack(4);
+  auto new_idx_5 = sv.Emplace(5);
   return 0;
 }
