@@ -26,7 +26,7 @@ public:
     return temp;
   }
   explicit operator bool() const {return value == nullvalue;}
-  explicit operator Idx() const {return value;}
+  operator Idx() const {return value;} // NOLINT
 private:
   Idx value;
 };
