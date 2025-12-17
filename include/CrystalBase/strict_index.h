@@ -27,7 +27,7 @@ public:
   }
   explicit operator bool() const {return value == nullvalue;}
   operator Idx() const {return value;} // NOLINT
-private:
+protected:
   Idx value;
 };
 } // namespace crystal
