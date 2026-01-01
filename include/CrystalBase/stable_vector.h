@@ -104,7 +104,8 @@ public:
    */
   template<typename... Args>
   [[nodiscard]] size_t EmplaceBack(Args&&... args) {
-    arr_.emplace_back(std::forward<Args>(args)...);
+    arr_.push_back();
+    arr_.back().emplace(std::forward<Args>(args)...);
     return arr_.size() - 1;
   }
   /**
@@ -122,6 +123,7 @@ public:
       size_t idx = free_head_;
       free_head_ = arr_[free_head_];
       arr_.emplace(arr_.begin() + idx, ele);
+      arr_[idx].template emplace<T>(ele);
       return idx;
     } else return PushBack(ele); // fall back
   }
@@ -139,7 +141,7 @@ public:
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
       free_head_ = arr_[free_head_];
-      arr_.emplace(arr_.begin() + idx, ele);
+      arr_.template emplace<T>(arr_.begin() + idx, ele);
       return idx;
     } else return PushBack(ele); // fall back
   }
@@ -158,7 +160,7 @@ public:
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
       free_head_ = arr_[free_head_];
-      arr_.emplace(arr_.begin() + idx, args...);
+      arr_[idx].template emplace<T>(args...);
       return idx;
     } else {
       return EmplaceBack(args...);
