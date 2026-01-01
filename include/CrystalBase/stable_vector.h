@@ -104,7 +104,7 @@ public:
    */
   template<typename... Args>
   [[nodiscard]] size_t EmplaceBack(Args&&... args) {
-    arr_.push_back(std::in_place_type<T>, std::forward<Args>(args)...);
+    arr_.emplace_back(std::in_place_type<T>, std::forward<Args>(args)...);
     return arr_.size() - 1;
   }
   /**
