@@ -21,7 +21,7 @@ struct tmp {
     tmp(tmp&& other) noexcept : val(other.val) {
         // Optional: Reset other.val to indicate it was moved
         other.val = -1; 
-        //std::cout << std::format("Move Constructor {}.", val) << std::endl;
+        std::cout << std::format("Move Constructor {}.", val) << std::endl;
     }
 
     ~tmp() {
