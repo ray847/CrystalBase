@@ -157,7 +157,7 @@ public:
   [[nodiscard]] size_t Emplace(Args&&... args) {
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
-      free_head_ = std::get<T>(arr_[free_head_]);
+      free_head_ = std::get<size_t>(arr_[free_head_]);
       arr_[idx].template emplace<T>(args...);
       return idx;
     } else {
