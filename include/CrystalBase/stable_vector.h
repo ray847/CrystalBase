@@ -19,8 +19,7 @@ public:
   /* Constructors */
   StableVector() : StableVector(allocator_type{}) {}
   explicit StableVector(const allocator_type& allocator):
-    arr_{allocator},
-    free_head_{free_head_} {}
+    arr_{allocator} {}
   template<typename Iter>
   StableVector(Iter begin, Iter end, const allocator_type& allocator = {}):
     StableVector(allocator) {
@@ -34,11 +33,11 @@ public:
   StableVector(const StableVector& other,
                const allocator_type& allocator = {}):
     arr_{other.arr_, allocator},
-    free_head_{free_head_} {}
+    free_head_{other.free_head_} {}
   StableVector(StableVector&&) = default;
   StableVector(StableVector&& other, const allocator_type& allocator):
     arr_{std::move(other.arr_), allocator},
-    free_head_{std::move(other.free_head_), allocator} {}
+    free_head_{other.free_head_} {}
 
   /* Assignment Operators */
   StableVector& operator=(const StableVector& other) = default;
