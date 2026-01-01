@@ -50,10 +50,10 @@ public:
   allocator_type get_allocator() const {return arr_.get_allocator();}
 
   /* Element Access */
-  T& At(size_t idx) { return arr_.at(idx); }
-  const T& At(size_t idx) const { return arr_.at(idx); }
-  T& operator[](size_t idx) { return arr_[idx]; }
-  const T& operator[](size_t idx) const { return arr_[idx]; }
+  T& At(size_t idx) { return std::get<T>(arr_.at(idx)); }
+  const T& At(size_t idx) const { return std::get<T>(arr_.at(idx)); }
+  T& operator[](size_t idx) { return std::get<T>(arr_[idx]); }
+  const T& operator[](size_t idx) const { return std::get<T>(arr_[idx]); }
 
   /* Capacity */
   void Reserve(size_t n) { arr_.reserve(n); }
@@ -104,8 +104,7 @@ public:
    */
   template<typename... Args>
   [[nodiscard]] size_t EmplaceBack(Args&&... args) {
-    arr_.push_back();
-    arr_.back().emplace(std::forward<Args>(args)...);
+    arr_.push_back(Ele{}.emplace(std::forward<Args>(args)...));
     return arr_.size() - 1;
   }
   /**
@@ -121,8 +120,7 @@ public:
  [[nodiscard]] size_t Insert(const T& ele) {
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
-      free_head_ = arr_[free_head_];
-      arr_.emplace(arr_.begin() + idx, ele);
+      free_head_ = std::get<size_t>(arr_[free_head_]);
       arr_[idx].template emplace<T>(ele);
       return idx;
     } else return PushBack(ele); // fall back
@@ -140,7 +138,7 @@ public:
   [[nodiscard]] size_t Insert(T&& ele) {
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
-      free_head_ = arr_[free_head_];
+      free_head_ = std::get<size_t>(arr_[free_head_]);
       arr_.template emplace<T>(arr_.begin() + idx, ele);
       return idx;
     } else return PushBack(ele); // fall back
@@ -159,7 +157,7 @@ public:
   [[nodiscard]] size_t Emplace(Args&&... args) {
     if (free_head_ != kNullIdx) {
       size_t idx = free_head_;
-      free_head_ = arr_[free_head_];
+      free_head_ = std::get<T>(arr_[free_head_]);
       arr_[idx].template emplace<T>(args...);
       return idx;
     } else {
@@ -171,7 +169,6 @@ public:
     arr_[idx] = free_head_;
     free_head_ = idx;
   }
-  void ShrinktoFit() {}
 
 private:
   using Ele = std::variant<T, size_t>;
