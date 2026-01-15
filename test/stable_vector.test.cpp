@@ -4,71 +4,71 @@
 #include <memory_resource>
 
 TEST(StableVectorTest, BasicPushAndAccess) {
-    crystal::StableVector<int> sv;
+    crystal::stable_vector<int> sv;
     
-    size_t idx0 = sv.PushBack(100);
-    size_t idx1 = sv.PushBack(200);
+    size_t idx0 = sv.push_back(100);
+    size_t idx1 = sv.push_back(200);
 
     EXPECT_EQ(idx0, 0);
     EXPECT_EQ(idx1, 1);
     
     EXPECT_EQ(sv[idx0], 100);
-    EXPECT_EQ(sv.At(idx1), 200);
+    EXPECT_EQ(sv.at(idx1), 200);
     
     // Test const access
     const auto& csv = sv;
     EXPECT_EQ(csv[idx0], 100);
-    EXPECT_EQ(csv.At(idx1), 200);
+    EXPECT_EQ(csv.at(idx1), 200);
 }
 
 TEST(StableVectorTest, EraseAndReuse) {
-    crystal::StableVector<int> sv;
+    crystal::stable_vector<int> sv;
     
-    size_t id0 = sv.PushBack(0); // 0
-    size_t id1 = sv.PushBack(1); // 1
-    size_t id2 = sv.PushBack(2); // 2
+    size_t id0 = sv.push_back(0); // 0
+    size_t id1 = sv.push_back(1); // 1
+    size_t id2 = sv.push_back(2); // 2
     
     EXPECT_EQ(id0, 0);
     EXPECT_EQ(id1, 1);
     EXPECT_EQ(id2, 2);
 
-    sv.Erase(id1); // Erase index 1. Free head should now be 1.
+    sv.erase(id1); // Erase index 1. Free head should now be 1.
 
     // Insert should reuse index 1
-    size_t id3 = sv.Insert(3);
+    size_t id3 = sv.insert(3);
     EXPECT_EQ(id3, 1);
     EXPECT_EQ(sv[id3], 3);
 
     // Next insert should append since free list is empty (assuming no more erasures)
-    size_t id4 = sv.Insert(4);
+    size_t id4 = sv.insert(4);
     EXPECT_EQ(id4, 3);
     EXPECT_EQ(sv[id4], 4);
 }
 
 TEST(StableVectorTest, MultipleErasures) {
-    crystal::StableVector<int> sv;
+    crystal::stable_vector<int> sv;
     // 0, 1, 2, 3
-    (void)sv.PushBack(10);
-    (void)sv.PushBack(20);
-    (void)sv.PushBack(30);
-    (void)sv.PushBack(40);
+    (void)sv.push_back(10);
+    (void)sv.push_back(20);
+    (void)sv.push_back(30);
+    (void)sv.push_back(40);
 
-    sv.Erase(0);
-    sv.Erase(2);
+    sv.erase(0);
+    sv.erase(2);
     // Free list should likely look like 2 -> 0 -> null (LIFO usually for simple linked list)
     // Code: arr_[idx].nxt = free_head_; free_head_ = idx;
     // 1. Erase(0): node[0].nxt = null; head = 0
     // 2. Erase(2): node[2].nxt = 0; head = 2
     
-    size_t new1 = sv.Insert(50);
+    size_t new1 = sv.insert(50);
     EXPECT_EQ(new1, 2);
     EXPECT_EQ(sv[new1], 50);
 
-    size_t new2 = sv.Insert(60);
+    size_t new2 = sv.insert(60);
     EXPECT_EQ(new2, 0);
     EXPECT_EQ(sv[new2], 60);
 
-    size_t new3 = sv.Insert(70);
+    size_t new3 = sv.insert(70);
     EXPECT_EQ(new3, 4);
 }
 
@@ -78,63 +78,63 @@ TEST(StableVectorTest, Emplace) {
         Point(int x, int y) : x(x), y(y) {}
     };
     
-    crystal::StableVector<Point> sv;
-    size_t idx = sv.EmplaceBack(1, 2);
+    crystal::stable_vector<Point> sv;
+    size_t idx = sv.emplace_back(1, 2);
     EXPECT_EQ(sv[idx].x, 1);
     EXPECT_EQ(sv[idx].y, 2);
     
-    sv.Erase(idx);
-    size_t idx2 = sv.Emplace(3, 4);
+    sv.erase(idx);
+    size_t idx2 = sv.emplace(3, 4);
     EXPECT_EQ(idx2, idx);
     EXPECT_EQ(sv[idx2].x, 3);
     EXPECT_EQ(sv[idx2].y, 4);
 }
 
 TEST(StableVectorTest, Clear) {
-    crystal::StableVector<int> sv;
-    (void)sv.PushBack(1);
-    (void)sv.PushBack(2);
-    sv.Erase(0);
+    crystal::stable_vector<int> sv;
+    (void)sv.push_back(1);
+    (void)sv.push_back(2);
+    sv.erase(0);
     
-    sv.Clear();
+    sv.clear();
     // Should be empty and reset
-    size_t idx = sv.PushBack(3);
+    size_t idx = sv.push_back(3);
     EXPECT_EQ(idx, 0);
 }
 
 TEST(StableVectorTest, CopyConstructor) {
-    crystal::StableVector<int> sv1;
-    (void)sv1.PushBack(10);
-    sv1.Erase(0);
-    (void)sv1.PushBack(20); // index 1. Index 0 is free.
+    crystal::stable_vector<int> sv1;
+    (void)sv1.push_back(10);
+    sv1.erase(0);
+    (void)sv1.push_back(20); // index 1. Index 0 is free.
 
     // sv1: [free, 20]
     
-    crystal::StableVector<int> sv2 = sv1;
+    crystal::stable_vector<int> sv2 = sv1;
     // sv2 should have index 0 free, index 1 = 20.
     
-    size_t idx = sv2.Insert(30); // Should use index 0
+    size_t idx = sv2.insert(30); // Should use index 0
     EXPECT_EQ(idx, 0);
     EXPECT_EQ(sv2[idx], 30);
     EXPECT_EQ(sv2[1], 20);
 }
 
 TEST(StableVectorTest, MoveConstructor) {
-    crystal::StableVector<int> sv1;
-    (void)sv1.PushBack(10);
-    sv1.Erase(0);
+    crystal::stable_vector<int> sv1;
+    (void)sv1.push_back(10);
+    sv1.erase(0);
     
-    crystal::StableVector<int> sv2(std::move(sv1));
+    crystal::stable_vector<int> sv2(std::move(sv1));
     
     // sv2 should have index 0 free
-    size_t idx = sv2.Insert(20);
+    size_t idx = sv2.insert(20);
     EXPECT_EQ(idx, 0);
     EXPECT_EQ(sv2[idx], 20);
 }
 
 TEST(StableVectorTest, IteratorConstructor) {
     std::vector<int> input = {1, 2, 3};
-    crystal::StableVector<int> sv(input.begin(), input.end());
+    crystal::stable_vector<int> sv(input.begin(), input.end());
     
     EXPECT_EQ(sv[0], 1);
     EXPECT_EQ(sv[1], 2);
@@ -142,7 +142,7 @@ TEST(StableVectorTest, IteratorConstructor) {
 }
 
 TEST(StableVectorTest, InitializerListConstructor) {
-    crystal::StableVector<int> sv = {10, 20, 30};
+    crystal::stable_vector<int> sv = {10, 20, 30};
     EXPECT_EQ(sv[0], 10);
     EXPECT_EQ(sv[1], 20);
     EXPECT_EQ(sv[2], 30);
@@ -178,15 +178,15 @@ TEST(StableVectorTest, PMRAllocatorUsage) {
     
     {
         // Construct with the custom resource
-        crystal::pmr::StableVector<int> sv(&res);
+        crystal::pmr::stable_vector<int> sv(&res);
         
         // Initial state
         EXPECT_EQ(res.allocated_bytes, 0);
         EXPECT_EQ(res.num_allocations, 0);
         
         // Pushing elements should trigger allocation
-        (void)sv.PushBack(1);
-        (void)sv.PushBack(2);
+        (void)sv.push_back(1);
+        (void)sv.push_back(2);
         
         // Check that allocations happened through our resource
         EXPECT_GT(res.allocated_bytes, 0);
@@ -196,7 +196,7 @@ TEST(StableVectorTest, PMRAllocatorUsage) {
         
         // Force vector resize/reallocation
         for (int i = 0; i < 100; ++i) {
-            (void)sv.PushBack(i);
+            (void)sv.push_back(i);
         }
         
         EXPECT_GT(res.allocated_bytes, current_alloc_bytes);
