@@ -1,19 +1,25 @@
 #ifndef CRYSTALBASE_CONCEPTS_H_
 #define CRYSTALBASE_CONCEPTS_H_
 
-#include <cstddef> // size_t
+#include <cstddef>
 
+#include <array>
 #include <concepts>
-#include <type_traits> // std::convertible_to
+#include <type_traits>
 
 namespace crystal {
-template<typename T, typename OutputType = void>
-concept Callable = requires (T t) {
-  {t()} -> std::convertible_to<OutputType>;
+template <typename T, typename OutputType = void>
+concept Callable = requires(T t) {
+  { t() } -> std::convertible_to<OutputType>;
 };
 
-template<typename T, size_t size>
+template <typename T, size_t size>
 concept ofSize = sizeof(T) == size;
+
+template <typename T>
+struct is_std_array : std::false_type {};
+template <typename T, size_t N>
+struct is_std_array<std::array<T, N>> : std::true_type {};
 } // namespace crystal
 
 #endif
