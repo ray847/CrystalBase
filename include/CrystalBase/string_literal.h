@@ -24,6 +24,7 @@ using std::array, std::string;
 template <size_t n>
 class string_literal {
  public:
+  array<char, n> data_;
   constexpr string_literal(const char (&str)[n]) {
     std::copy_n(str, n, data_.data());
   }
@@ -31,9 +32,6 @@ class string_literal {
   operator string() const {
     return string{ data_.data(), n };
   }
-
- private:
-  array<char, n> data_;
 };
 
 /* Concept */
