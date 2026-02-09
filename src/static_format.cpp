@@ -1,0 +1,1 @@
+#include "CrystalBase/static_format.h"

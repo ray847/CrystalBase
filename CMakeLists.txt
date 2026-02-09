@@ -16,8 +16,10 @@ target_sources(CrystalBase
     src/base.cpp
     src/concepts.cpp
     src/containers.cpp
+    src/fixed_string.cpp
     src/stable_vector.cpp
     src/strict_index.cpp
+    src/static_format.cpp
     src/unrolled_for_loop.cpp
 )
 target_include_directories(CrystalBase
