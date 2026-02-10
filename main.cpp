@@ -7,6 +7,6 @@
 int main() {
   using std::string;
   //auto fs = crystal::static_format<-123>();
-  auto fs = crystal::static_format<"{}def{}", crystal::fixed_string("abc"), 456>();
+  auto fs = crystal::static_format<"{}{}{}", crystal::fixed_string("abc"), 'd', 456>();
   std::cout << string(fs);
 }

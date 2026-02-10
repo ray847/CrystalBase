@@ -2,6 +2,8 @@
 #define CRYSTALBASE_STATIC_FORMAT_H_
 
 #include <concepts>
+#include <type_traits>
+#include <array>
 
 #include "fixed_string.h"
 
@@ -10,7 +12,9 @@ namespace crystal {
 
 template <auto val>
 consteval auto static_format_arg() {
-  if constexpr (std::integral<decltype(val)>) {
+  if constexpr (std::is_same_v<decltype(val), char>) {
+    return fixed_string<1>(std::array<char, 1>{val});
+  } else if constexpr (std::integral<decltype(val)>) {
     if constexpr (val == 0) return fixed_string("0");
 
     // Calculate digits
