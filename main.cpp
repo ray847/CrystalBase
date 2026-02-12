@@ -1,12 +1,16 @@
-#include <string>
 #include <iostream>
 
-#include "include/CrystalBase/fixed_string.h"
-#include "CrystalBase/static_format.h"
+#include <CrystalBase/integer_sequence.h>
+
+template <crystal::integer_sequence seq>
+void Print() {
+	for (auto ele : seq) {
+		std::cout << ele << ' ';
+	}
+	std::cout << std::endl;
+}
 
 int main() {
-  using std::string;
-  //auto fs = crystal::static_format<-123>();
-  auto fs = crystal::static_format<"{}{}{}", crystal::fixed_string("abc"), 'd', 456>();
-  std::cout << string(fs);
+	Print<{1, 2, 3}>();
+  return 0;
 }
