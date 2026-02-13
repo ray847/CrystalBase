@@ -1,16 +1,12 @@
 #include <iostream>
+#include <bitset>
 
-#include <CrystalBase/integer_sequence.h>
-
-template <crystal::integer_sequence seq>
-void Print() {
-	for (auto ele : seq) {
-		std::cout << ele << ' ';
-	}
-	std::cout << std::endl;
-}
+#include <CrystalBase/bitwise.h>
 
 int main() {
-	Print<{1, 2, 3}>();
+	std::bitset<16> bits = 0b0101010;
+	auto neg = crystal::negbit(bits);
+	auto lowbit = crystal::lowbit(bits);
+	std::cout << bits << ' ' << neg << ' ' <<  lowbit << std::endl;
   return 0;
 }
