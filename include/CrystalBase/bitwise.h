@@ -2,10 +2,11 @@
 #define CRYSTALBASE_BITWISE_H_
 
 #include <bitset> // std::bitset
+#include <concepts> // std::unsigned_integral
 
 namespace crystal {
 
-using std::bitset;
+using std::bitset, std::unsigned_integral;
 
 template <size_t kNBits>
 constexpr bitset<kNBits> operator -(const bitset<kNBits>& bits) {
@@ -30,8 +31,14 @@ auto negbit(const auto& bits) {
   return -bits;
 }
 
+
 template <size_t kNBits>
 constexpr bitset<kNBits> lowbit(const bitset<kNBits>& bits) {
+  return bits & -bits;
+}
+
+template <unsigned_integral u>
+constexpr u lowbit(u bits) {
   return bits & -bits;
 }
 
