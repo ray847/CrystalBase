@@ -1,1 +1,0 @@
-#include "CrystalBase/fixed_string.h"

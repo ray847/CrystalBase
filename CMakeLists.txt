@@ -13,14 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(CrystalBase)
 target_sources(CrystalBase
   PRIVATE
-    src/base.cpp
-    src/concepts.cpp
-    src/containers.cpp
-    src/fixed_string.cpp
-    src/stable_vector.cpp
-    src/strict_index.cpp
-    src/static_format.cpp
-    src/unrolled_for_loop.cpp
+    src/header_only.cpp
 )
 target_include_directories(CrystalBase
   PUBLIC
