@@ -1,6 +1,8 @@
 #ifndef CRYSTALBASE_INTEGER_SEQUENCE_H_
 #define CRYSTALBASE_INTEGER_SEQUENCE_H_
 
+#include <cstddef>
+
 namespace crystal {
 
 /**
