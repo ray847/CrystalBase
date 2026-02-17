@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <string_view>
+#include <ostream>
 
 namespace crystal {
 
@@ -38,6 +39,12 @@ struct fixed_string {
   consteval char operator[](size_t i) const { return data_[i]; }
   consteval bool operator==(const fixed_string& other) const = default;
 };
+
+/* Output to stream. */
+template <size_t kN>
+std::ostream& operator<<(std::ostream& os, const fixed_string<kN>& fs) {
+  return os << static_cast<std::string_view>(fs);
+}
 
 /* Template deduction guide for construction from string literal. */
 template <size_t N>

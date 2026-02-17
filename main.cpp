@@ -1,12 +1,9 @@
 #include <iostream>
-#include <bitset>
 
-#include <CrystalBase/bitwise.h>
+#include <CrystalBase/fixed_string.h>
 
 int main() {
-	std::bitset<16> bits = 0b0101010;
-	auto neg = crystal::negbit(bits);
-	auto lowbit = crystal::lowbit(bits);
-	std::cout << bits << ' ' << neg << ' ' <<  lowbit << std::endl;
+	const crystal::fixed_string string{"123"};
+	std::cout << string << std::endl;
   return 0;
 }
