@@ -23,26 +23,26 @@ template <size_t N>
 struct fixed_string {
   std::array<char, N> data_{};
 
-  consteval fixed_string() = default;
+  constexpr fixed_string() = default;
 
-  consteval fixed_string(const char (&str)[N + 1]) {
+  constexpr fixed_string(const char (&str)[N + 1]) {
     std::copy_n(str, N, data_.begin());
   }
 
-  consteval explicit fixed_string(std::array<char, N> const& arr) : data_(arr) {
+  constexpr explicit fixed_string(std::array<char, N> const& arr) : data_(arr) {
   }
 
   constexpr operator std::string_view() const {
     return std::string_view(data_.data(), N);
   }
 
-  consteval size_t size() const {
+  constexpr size_t size() const {
     return N;
   }
-  consteval char operator[](size_t i) const {
+  constexpr char operator[](size_t i) const {
     return data_[i];
   }
-  consteval bool operator==(const fixed_string& other) const = default;
+  constexpr bool operator==(const fixed_string& other) const = default;
 };
 
 /* Output to stream. */
