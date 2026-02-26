@@ -3,8 +3,8 @@
 
 #include <algorithm>
 #include <array>
-#include <string_view>
 #include <ostream>
+#include <string_view>
 
 namespace crystal {
 
@@ -29,14 +29,19 @@ struct fixed_string {
     std::copy_n(str, N, data_.begin());
   }
 
-  consteval explicit fixed_string(std::array<char, N> const& arr) : data_(arr) {}
+  consteval explicit fixed_string(std::array<char, N> const& arr) : data_(arr) {
+  }
 
   constexpr operator std::string_view() const {
     return std::string_view(data_.data(), N);
   }
-  
-  consteval size_t size() const { return N; }
-  consteval char operator[](size_t i) const { return data_[i]; }
+
+  consteval size_t size() const {
+    return N;
+  }
+  consteval char operator[](size_t i) const {
+    return data_[i];
+  }
   consteval bool operator==(const fixed_string& other) const = default;
 };
 
@@ -63,13 +68,13 @@ template <auto... fs>
 consteval auto join() {
   constexpr size_t total_len = (fs.size() + ... + 0);
   std::array<char, total_len> arr{};
-  
+
   size_t offset = 0;
   auto append = [&](auto const& s) {
     for (size_t i = 0; i < s.size(); ++i) arr[offset++] = s[i];
   };
   (append(fs), ...);
-  
+
   return fixed_string<total_len>(arr);
 }
 
@@ -77,9 +82,7 @@ template <fixed_string s, size_t st, size_t ed>
 consteval auto slice() {
   constexpr size_t new_len = ed - st;
   std::array<char, new_len> arr{};
-  for (size_t i = 0; i < new_len; ++i) {
-    arr[i] = s[st + i];
-  }
+  for (size_t i = 0; i < new_len; ++i) { arr[i] = s[st + i]; }
   return fixed_string<new_len>(arr);
 }
 
@@ -101,5 +104,17 @@ consteval size_t find_idx() {
 }
 
 } // namespace crystal
+
+/* Hashing */
+namespace std {
+template <size_t n>
+struct hash<crystal::fixed_string<n>> {
+  size_t operator()(const crystal::fixed_string<n>& str) const noexcept {
+    size_t hash = 0;
+    for (size_t i = 0; i < n; ++i) hash ^= str[i];
+    return hash;
+  }
+};
+} // namespace std
 
 #endif
