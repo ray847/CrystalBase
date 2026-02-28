@@ -105,14 +105,26 @@ consteval size_t find_idx() {
 
 } // namespace crystal
 
-/* Hashing */
 namespace std {
+/* Hashing */
 template <size_t n>
 struct hash<crystal::fixed_string<n>> {
   size_t operator()(const crystal::fixed_string<n>& str) const noexcept {
     size_t hash = 0;
     for (size_t i = 0; i < n; ++i) hash ^= str[i];
     return hash;
+  }
+};
+/* Formatting */
+template <size_t kN>
+struct formatter<crystal::fixed_string<kN>> : formatter<string> {
+  constexpr auto parse(format_parse_context& ctx) {
+    return formatter<string>::parse(ctx);
+  }
+
+  auto format(const crystal::fixed_string<kN>& fs, format_context& ctx) const {
+    std::string str{std::string_view{fs}};
+    return formatter<std::string>::format(str, ctx);
   }
 };
 } // namespace std
